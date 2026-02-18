@@ -12,7 +12,15 @@ import Users from './pages/Users'
 import GlobalStyles from './styles/Globalstyle'
 import AppLayout from './ui/AppLayout'
 
+//
+import { useEffect } from 'react'
+import { getCabinss } from './services/apiCabins'
+
 const App = () => {
+  useEffect(() => {
+    getCabinss().then((data) => console.log(data))
+  }, [])
+
   return (
     <>
       <GlobalStyles />
