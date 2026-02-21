@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import Dashboard from './pages/Dashboard'
 import Bookings from './pages/Bookings'
@@ -12,17 +14,14 @@ import Users from './pages/Users'
 import GlobalStyles from './styles/Globalstyle'
 import AppLayout from './ui/AppLayout'
 
-//
-import { useEffect } from 'react'
-import { getCabinss } from './services/apiCabins'
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 60 * 1000 } },
+})
 
 const App = () => {
-  useEffect(() => {
-    getCabinss().then((data) => console.log(data))
-  }, [])
-
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       <BrowserRouter>
         <Routes>
@@ -39,7 +38,7 @@ const App = () => {
           <Route path='*' element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   )
 }
 
