@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { createEditCabin } from '../../services/apiCabins'
+import { createCabin } from '../../services/apiCabins'
 
 import Input from '../../ui/Input'
 import Form from '../../ui/Form'
@@ -10,19 +10,14 @@ import FileInput from '../../ui/FileInput'
 import Textarea from '../../ui/Textarea'
 import FormRow from '../../ui/FormRow'
 
-function CreateCabinForm({ cabinToEdit = {} }) {
-  const { id: editId, ...editValues } = cabinToEdit
-  const isEditSession = Boolean(editId)
-
-  const { register, handleSubmit, reset, getValues, formState } = useForm({
-    defaultValues: isEditSession ? editValues : {},
-  })
+function CreateCabinForm() {
+  const { register, handleSubmit, reset, getValues, formState } = useForm()
   const { errors } = formState
 
   const queryClient = useQueryClient()
 
-  const { isPending: isCreating, mutate: createCabin } = useMutation({
-    mutationFn: createEditCabin,
+  const { isPending, mutate } = useMutation({
+    mutationFn: createCabin,
     onSuccess: async () => {
       toast.success('Cabin created successfully')
       await queryClient.invalidateQueries({ queryKey: ['cabins'] })
@@ -31,30 +26,18 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     onError: (err) => toast.error(err.message),
   })
 
-  const { isPending: isEditing, mutate: editCabin } = useMutation({
-    mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
-    onSuccess: async () => {
-      toast.success('Cabin successfully edited')
-      await queryClient.invalidateQueries({ queryKey: ['cabins'] })
-      reset()
-    },
-    onError: (err) => toast.error(err.message),
-  })
-
   const onSubmit = (data) => {
-    const image = typeof data.image === 'string' ? data.image : data.image[0]
-
-    if (isEditSession) {
-      editCabin({ newCabinData: { ...data, image }, id: editId })
-    } else {
-      createCabin({ ...data, image })
-    }
+    // console.log(data)
+    // console.log(data.image[0].name)
+    mutate({ ...data, image: data.image[0] })
   }
 
-  const isPending = isCreating || isEditing
+  const onError = (errors) => {
+    console.log(errors)
+  }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <FormRow label='Cabin name' error={errors?.name?.message}>
         <Input
           type='text'
@@ -124,9 +107,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           id='image'
           accept='image/*'
           disabled={isPending}
-          {...register('image', {
-            required: isEditSession ? false : 'This field is required',
-          })}
+          {...register('image', { required: 'This field is required' })}
         />
       </FormRow>
 
@@ -135,9 +116,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         <Button $variation='secondary' type='reset'>
           Cancel
         </Button>
-        <Button disabled={isPending}>
-          {isEditSession ? 'Edit Cabin' : 'Create new cabin'}
-        </Button>
+        <Button disabled={isPending}>Add cabin</Button>
       </FormRow>
     </Form>
   )
