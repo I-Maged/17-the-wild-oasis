@@ -11,7 +11,9 @@ export async function getBookings({ filter, sortBy }) {
     .from('bookings')
     .select('*, cabins(name), guest(fullName, email)')
 
-  if (filter !== null) query = query.eq(filter.field, filter.value)
+  if (filter) query = query.eq(filter.field, filter.value)
+
+  query = query.order(sortBy.field, { ascending: sortBy.direction === 'asc' })
 
   let { data, error } = await query
 
