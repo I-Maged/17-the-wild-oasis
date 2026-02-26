@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import Spinner from '../../ui/Spinner'
-import CabinRow from './CabinRow'
 import { useCabins } from './useCabins'
 import Table from '../../ui/Table'
 import Menus from '../../ui/Menus'
+import Empty from '../../ui/Empty'
+import CabinRow from './CabinRow'
 import { useSearchParams } from 'react-router-dom'
 
 const TableHeader = styled.header`
@@ -50,6 +51,8 @@ const CabinTable = () => {
   const sortedCabins = filteredCabins.sort(
     (a, b) => (a[field] - b[field]) * modifier,
   )
+
+  if (!cabins.length) return <Empty resourceName='Cabins' />
 
   return (
     <Menus>
