@@ -3,7 +3,6 @@ import Table from '../../ui/Table'
 import Menus from '../../ui/Menus'
 import { useBookings } from './useBookings'
 import Spinner from '../../ui/Spinner'
-
 import Empty from '../../ui/Empty'
 
 function BookingTable() {
