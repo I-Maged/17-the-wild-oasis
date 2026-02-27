@@ -1,1 +1,1 @@
-export const BOOKING_PER_PAGE = 10
+export const BOOKING_PER_PAGE = 5
