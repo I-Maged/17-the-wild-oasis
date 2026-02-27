@@ -58,7 +58,7 @@ const PaginationButton = styled.button`
   }
 `
 
-const BOOKING_PER_PAGE = 10
+import { BOOKING_PER_PAGE } from '../utils/constants'
 
 const Pagination = ({ count }) => {
   const [searchParams, setSearchParams] = useSearchParams()
