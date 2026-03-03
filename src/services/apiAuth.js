@@ -44,3 +44,37 @@ export async function signup({ email, password, fullName }) {
 
   return data
 }
+
+export async function updateCurrentUser({ password, fullName, avatar }) {
+  // 1. Update password or fullName
+  let updateData
+  if (password) updateData = { password }
+  if (fullName) updateData = { data: { fullName } }
+
+  const { data, error } = await supabase.auth.updateUser(updateData)
+
+  if (error) throw new Error(error.message)
+
+  if (!avatar) return data
+
+  // 2. upload avatar
+  const fileName = `avatar-${data.user.id}-${Math.random()}`
+
+  const { error: storageError } = await supabase.storage
+    .from('avatars')
+    .upload(fileName, avatar)
+
+  if (storageError) throw new Error(storageError.message)
+
+  // 3. update avatar into user
+  const { data: updatedUser, error: avatarUpdateError } =
+    await supabase.auth.updateUser({
+      data: {
+        avatar: `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/avatars/${fileName}`,
+      },
+    })
+
+  if (avatarUpdateError) throw new Error(avatarUpdateError.message)
+
+  return updatedUser
+}
