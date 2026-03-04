@@ -59,7 +59,10 @@ const SalesChart = ({ bookings = [], numDays }) => {
 
   return (
     <StyledSalesChart>
-      <Heading as='h2'>Sales</Heading>
+      <Heading as='h2'>
+        Sales from {format(allDates.at(0), 'dd MMM yyyy')} to{' '}
+        {format(allDates.at(-1), 'dd MMM yyyy')}
+      </Heading>
 
       <ResponsiveContainer width='100%' height={300} maxWidth={700}>
         <AreaChart data={data}>
