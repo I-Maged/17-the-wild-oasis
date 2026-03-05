@@ -18,6 +18,7 @@ import { useDeleteBooking } from './useDeleteBooking'
 import Menus from '../../ui/Menus'
 import Modal from '../../ui/Modal'
 import ConfirmDelete from '../../ui/ConfirmDelete'
+import Empty from '../../ui/Empty'
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -34,6 +35,7 @@ function BookingDetail() {
   const moveBack = useMoveBack()
 
   if (isLoading) return <Spinner />
+  if (!booking) return <Empty resourceName='booking' />
 
   const { status, id: bookingId } = booking
 
@@ -64,7 +66,7 @@ function BookingDetail() {
 
         {status === 'checked-in' && (
           <Button
-            icon={<HiArrowUpOnSquare />}
+            $icon={<HiArrowUpOnSquare />}
             onClick={() => checkout(bookingId)}
             disabled={isCheckingOut}
           >

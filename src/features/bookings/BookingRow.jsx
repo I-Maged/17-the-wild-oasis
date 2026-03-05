@@ -128,7 +128,11 @@ function BookingRow({
 
           <Modal>
             <Modal.Open opens='delete'>
-              <Button $variation='danger' icon={<HiTrash />}>
+              <Button
+                $variation='danger'
+                $icon={<HiTrash />}
+                style={{ width: '100%' }}
+              >
                 Delete
               </Button>
             </Modal.Open>

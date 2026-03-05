@@ -1,6 +1,5 @@
 import Logo from './Logo'
 import MainNav from './MainNav'
-import Uploader from '../data/Uploader'
 
 import styled from 'styled-components'
 
@@ -19,7 +18,6 @@ const Sidebar = () => {
     <StyledSidebar>
       <Logo />
       <MainNav />
-      <Uploader />
     </StyledSidebar>
   )
 }
